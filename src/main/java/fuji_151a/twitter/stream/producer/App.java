@@ -5,7 +5,9 @@
  */
 package fuji_151a.twitter.stream.producer;
 
-import twitter4j.*;
+
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 import twitter4j.auth.AccessToken;
 
 /**
