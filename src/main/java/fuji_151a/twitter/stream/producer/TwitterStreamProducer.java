@@ -34,10 +34,10 @@ public class TwitterStreamProducer {
         try {
             prop.load(new FileInputStream(fileName));
             configCheck(prop);
-            consumerKey = prop.getProperty("consumerKey");
-            consumerSecret = prop.getProperty("consumerSecret");
-            accessToken = prop.getProperty("accessToken");
-            secretToken = prop.getProperty("secretToken");
+            this.consumerKey = prop.getProperty("consumerKey");
+            this.consumerSecret = prop.getProperty("consumerSecret");
+            this.accessToken = prop.getProperty("accessToken");
+            this.secretToken = prop.getProperty("secretToken");
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.exit(1);
