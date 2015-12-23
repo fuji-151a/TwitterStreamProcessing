@@ -3,7 +3,7 @@
  *
  * @since 2015/11/01
  */
-package fuji_151a.twitter.stream.producer;
+package fuji.twitter.stream.producer;
 
 import org.junit.After;
 import org.junit.Before;

@@ -6,7 +6,7 @@
  * Copyright 2015 fuji-151a
  * All Rights Reserved.
  */
-package fuji_151a.twitter.stream.producer;
+package fuji.twitter.stream.producer;
 
 import com.google.common.base.Preconditions;
 import twitter4j.TwitterStream;
@@ -23,12 +23,35 @@ import java.util.Properties;
  * @author fuji-151a
  */
 public class TwitterStreamProducer {
+    /**
+     * Twitter Stream.
+     */
     private TwitterStream twitterStream;
+
+    /**
+     * consumer key.
+     */
     private String consumerKey;
+
+    /**
+     * consumer secret.
+     */
     private String consumerSecret;
+
+    /**
+     * access token.
+     */
     private String accessToken;
+
+    /**
+     * secret token.
+     */
     private String secretToken;
 
+    /**
+     * constructor.
+     * @param fileName config file.
+     */
     public TwitterStreamProducer(final String fileName) {
         Properties prop = new Properties();
         try {
@@ -44,7 +67,11 @@ public class TwitterStreamProducer {
         }
     }
 
-    public void setup(SimpleKafkaProducer producer) {
+    /**
+     * Set up application.
+     * @param producer SimpleKafkaProducer
+     */
+    public final void setup(final SimpleKafkaProducer producer) {
         // SetUp AccessToken
         Configuration conf = new ConfigurationBuilder()
                 .setOAuthConsumerKey(consumerKey)
@@ -58,14 +85,30 @@ public class TwitterStreamProducer {
         twitterStream.addListener(new Listener(producer));
     }
 
-    private void configCheck(Properties prop) {
-        Preconditions.checkNotNull(prop.getProperty("consumerKey"), "Not found Consumer Key");
-        Preconditions.checkNotNull(prop.getProperty("consumerSecret"), "Not found Consumer Secret");
-        Preconditions.checkNotNull(prop.getProperty("accessToken"), "Not found Access Token");
-        Preconditions.checkNotNull(prop.getProperty("secretToken"), "Not found secret Token");
+    /**
+     * check validator.
+     * @param prop properties file.
+     */
+    private void configCheck(final Properties prop) {
+        Preconditions.checkNotNull(
+                prop.getProperty("consumerKey"),
+                "Not found Consumer Key");
+        Preconditions.checkNotNull(
+                prop.getProperty("consumerSecret"),
+                "Not found Consumer Secret");
+        Preconditions.checkNotNull(
+                prop.getProperty("accessToken"),
+                "Not found Access Token");
+        Preconditions.checkNotNull(
+                prop.getProperty("secretToken"),
+                "Not found secret Token");
     }
 
-    public void run(final String lang) {
+    /**
+     * run twitterStream.
+     * @param lang filter lang
+     */
+    public final void run(final String lang) {
         twitterStream.sample(lang);
     }
 }

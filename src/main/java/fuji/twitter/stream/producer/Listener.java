@@ -6,7 +6,7 @@
  * Copyright 2015 fuji-151a
  * All Rights Reserved.
  */
-package fuji_151a.twitter.stream.producer;
+package fuji.twitter.stream.producer;
 
 import com.google.gson.Gson;
 import twitter4j.Status;
@@ -22,16 +22,22 @@ public class Listener extends StatusAdapter {
      */
     private final Gson gson = new Gson();
 
+    /**
+     * SimpleKafkaProducer instance.
+     */
     private final SimpleKafkaProducer skp;
 
-
-    public Listener(SimpleKafkaProducer _skp) {
-        this.skp = _skp;
+    /**
+     * constructor.
+     * @param producer SimpleKafkaProducer
+     */
+    public Listener(final SimpleKafkaProducer producer) {
+        this.skp = producer;
     }
 
     // Tweetを受け取るたびにこのメソッドが呼び出される
     @Override
-    public void onStatus(Status status) {
+    public final void onStatus(final Status status) {
         skp.produce(gson.toJson(status));
     }
 

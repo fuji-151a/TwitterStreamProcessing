@@ -3,24 +3,49 @@
  *
  * @since 2015/11/01
  */
-package fuji_151a.twitter.stream.producer;
+package fuji.twitter.stream.producer;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+
 /**
  * Main Application.
  * @author fuji-151a
  */
-public class App {
-    @Option(name = "-c", aliases = "--config", required = true, metaVar = "<config>", usage = "configuration file")
+public final class App {
+
+    /**
+     * config file.
+     */
+    @Option(name = "-c", aliases = "--config",
+            required = true, metaVar = "<config>", usage = "configuration file")
     private String configFile;
-    @Option(name = "-l", aliases = "--lang", metaVar = "<lang>", usage = "filter lang")
+
+    /**
+     * filter lang.
+     */
+    @Option(name = "-l", aliases = "--lang",
+            metaVar = "<lang>", usage = "filter lang")
     private String lang;
-    @Option(name="-h", aliases="--help", usage="print usage message and exit")
+
+    /**
+     * usage flag.
+     */
+    @Option(name = "-h", aliases = "--help",
+            usage = "print usage message and exit")
     private boolean usageFlag;
 
-    public static void main(String[] args) {
+    /**
+     * default constructor.
+     */
+    private App() { }
+
+    /**
+     * Main class.
+     * @param args option.
+     */
+    public static void main(final String[] args) {
         App app = new App();
         CmdLineParser parser = new CmdLineParser(app);
         try {
