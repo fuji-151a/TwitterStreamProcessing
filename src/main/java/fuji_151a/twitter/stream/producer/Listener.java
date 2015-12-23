@@ -22,18 +22,17 @@ public class Listener extends StatusAdapter {
      */
     private final Gson gson = new Gson();
 
-    /**
-     * Filter Lang.
-     */
-    private static final String FILETER_LANG = "ja";
+    private final SimpleKafkaProducer skp;
+
+
+    public Listener(SimpleKafkaProducer _skp) {
+        this.skp = _skp;
+    }
 
     // Tweetを受け取るたびにこのメソッドが呼び出される
     @Override
     public void onStatus(Status status) {
-        if (FILETER_LANG.equals(status.getLang())) {
-            String json = gson.toJson(status);
-            System.out.println(json);
-        }
+        skp.produce(gson.toJson(status));
     }
 
 }
