@@ -23,3 +23,7 @@ dependencies {
     testCompile "junit:junit:4.11"
 }
 
+jar {
+    archiveName = "${baseName}-${version}.jar"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
