@@ -3,22 +3,30 @@ version '1.0-SNAPSHOT'
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
-
+apply plugin: 'application'
+apply plugin: 'checkstyle'
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
-
+checkstyleMain.configFile = file("${rootProject.projectDir}/conf/checkstyle/checkstyle.xml")
+checkstyle.toolVersion = '6.7'
+mainClassName = "App"
 // In this section you declare the dependencies for your production and test code
 dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
+    compile 'org.twitter4j:twitter4j-stream:4.0.4'
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'org.apache.kafka:kafka-clients:0.8.2.2'
+    compile 'args4j:args4j:2.32'
+    compile 'com.google.guava:guava:19.0'
 
-    // Declare the dependency for your favourite test framework you want to use in your tests.
-    // TestNG is also supported by the Gradle Test task. Just change the
-    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
-    // 'test.useTestNG()' to your build script.
     testCompile "junit:junit:4.11"
+}
+
+jar {
+    archiveName = "${baseName}-${version}.jar"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
