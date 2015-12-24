@@ -10,7 +10,6 @@ package fuji.twitter.stream.consumer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import com.sun.jdi.IntegerValue;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
@@ -46,7 +45,7 @@ public class SimpleKafkaConsumer {
         try {
             prop.load(new FileInputStream(fileName));
             this.topic = prop.getProperty("topic");
-            this.partition = IntegerValue.of(prop.getProperty("partition"))
+            this.partition = Integer.valueOf(prop.getProperty("partition"));
             ConsumerConfig config = new ConsumerConfig(prop);
             consumer = Consumer.createJavaConsumerConnector(config);
         } catch (IOException e) {
