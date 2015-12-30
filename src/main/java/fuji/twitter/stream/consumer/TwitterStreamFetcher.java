@@ -37,12 +37,16 @@ public class TwitterStreamFetcher {
     /** String dateDir. */
     private String dateDir;
 
+    private SimpleKafkaConsumer kc;
+
     /** File Sizeの閾値. */
     private static final long THRESHOLD = 104857600;
 
     /** 改行コード. */
     private static String BR
             = System.getProperty("line.separator");
+
+    private static final String EXTENSION = ".txt";
 
 
     /**
@@ -62,7 +66,7 @@ public class TwitterStreamFetcher {
         List<KafkaStream<String, String>> streams = kc.consume();
         boolean flag = true;
         tsf.setOutputRootDir(args[1]);
-        tsf.setFileName(tsf.getToday() + ".txt");
+        tsf.setFileName(tsf.getToday() + EXTENSION);
         for (KafkaStream<String, String> stream : streams) {
             for (MessageAndMetadata<String, String> msg : stream) {
                 if (flag) {
@@ -76,6 +80,41 @@ public class TwitterStreamFetcher {
                 }
                 String data = msg.message();
                 tsf.write(data);
+            }
+        }
+    }
+
+    public TwitterStreamFetcher() {
+
+    }
+
+    public TwitterStreamFetcher(SimpleKafkaConsumer consumer, final String rootDir) {
+        this.rootPath = rootDir;
+        this.kc = consumer;
+        setFileName(getToday() + EXTENSION);
+    }
+
+    public void run() throws Exception {
+        List<KafkaStream<String, String>> streams = kc.consume();
+        boolean flag = true;
+        FileController filectrl = new FileController(EXTENSION, THRESHOLD);
+        for (KafkaStream<String, String> stream : streams) {
+            for (MessageAndMetadata<String, String> msg : stream) {
+                if (flag) {
+                    JSONObject jsonObject =
+                            new JSONObject(msg.message());
+                    String createAt =
+                            convertDate(jsonObject.getString("createdAt"));
+                    setFileName(createAt);
+                    String outputPath = rootPath + createAt.substring(0, 8) + "/";
+                    filectrl.makeDateDir(outputPath);
+                    setOutputDir(outputPath);
+                    setDateDir(createAt.substring(0, 8));
+                    flag = false;
+                }
+                String data = msg.message();
+                File file = new File(fileName);
+                write(data);
             }
         }
     }
@@ -94,7 +133,7 @@ public class TwitterStreamFetcher {
             JSONObject jsonObject = new JSONObject(msg);
             String date = convertDate(jsonObject.getString("createdAt"));
             if (file.length() > THRESHOLD) {
-                this.fileName = date + ".txt";
+                this.fileName = date + EXTENSION;
                 return;
             } else if (!dateDir.equals(date.substring(0, 8))) {
                 makeDir(date);

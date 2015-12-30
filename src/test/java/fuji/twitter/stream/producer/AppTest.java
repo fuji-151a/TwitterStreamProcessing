@@ -6,6 +6,7 @@
 package fuji.twitter.stream.producer;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +27,11 @@ public class AppTest {
 
     }
 
-    @Test
+//    @Test
     public void test() throws Exception {
         // TODO Create Test Code.
-        String str = "Dec 24, 2015 1:36:06 AM";
+//        String str = "Dec 24, 2015 1:36:06 AM";
+        String str = "Dec 24, 2015 1:36:06";
         System.out.println(convertDate(str));
     }
 
@@ -39,10 +41,14 @@ public class AppTest {
      * @return yyyyMMddHHmmの形式
      */
     private String convertDate(final String date) {
-        Calendar cal = Calendar.getInstance();
-        Date d = new Date(date);
-        DateTime dt = new DateTime(date);
-        return dt.toString("yyyyMMddHHmm");
+//        Date d = new Date(date);
+//        String pattern = "MMM dd, yyyy HH:mm:ss a";
+        String pattern = "MMM dd, yyyy HH:mm:ss";
+        DateTime dt = DateTime.parse(date,
+                DateTimeFormat.forPattern(pattern));
+        System.out.println(dt.toString("MMM a"));
+        return dt.toString();
+//        return dt.toString("yyyyMMddHHmm");
     }
 
     @After
