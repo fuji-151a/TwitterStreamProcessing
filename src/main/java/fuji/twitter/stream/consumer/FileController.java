@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-
 /**
  *
  * @author fuji-151a
@@ -29,6 +28,14 @@ public class FileController {
     private String fileName;
 
     private String dateDir;
+
+    /** File Sizeの閾値. */
+    private static final long THRESHOLD = 104857600;
+    private static final String EXTENSION = ".txt";
+
+    public FileController() {
+        this(EXTENSION, THRESHOLD);
+    }
     public FileController(final String extension, final long threshold) {
         this.ext = extension;
         this.thr = threshold;
