@@ -33,7 +33,6 @@ public class DateConverter {
 
     /**
      * 指定した日付フォーマットに変換.
-     * @param date created_atの値
      * @return yyyyMMddHHmmの形式
      */
     public String convertDate() {
