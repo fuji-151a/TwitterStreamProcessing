@@ -61,6 +61,7 @@ public class FileController {
         return false;
     }
 
+    // Testしづらい修正の余地大幅にあり．
     public void write(final String msg, final File file) throws JSONException, IOException {
         if (checkBeforeWriteFile(file)) {
             JSONObject jsonObject = new JSONObject(msg);
@@ -83,5 +84,13 @@ public class FileController {
                 }
             }
         }
+    }
+
+    public void setDateDir(final String dirname) {
+        this.dateDir = dirname;
+    }
+
+    public void setfileName(final String name) {
+        this.fileName = name;
     }
 }
