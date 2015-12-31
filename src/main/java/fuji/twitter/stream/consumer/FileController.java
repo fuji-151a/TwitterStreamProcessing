@@ -63,6 +63,7 @@ public class FileController {
 
     // Testしづらい修正の余地大幅にあり．
     public void write(final String msg, final File file) throws JSONException, IOException {
+        file.createNewFile();
         if (checkBeforeWriteFile(file)) {
             JSONObject jsonObject = new JSONObject(msg);
             DateConverter dc = new DateConverter(jsonObject.getString("createdAt"));
@@ -90,7 +91,11 @@ public class FileController {
         this.dateDir = dirname;
     }
 
-    public void setfileName(final String name) {
-        this.fileName = name;
+    public void setFileName(final String name) {
+        this.fileName = name + ".txt";
+    }
+
+    public String getFileName() {
+        return this.fileName;
     }
 }
