@@ -68,7 +68,7 @@ public class TwitterStreamFetcher {
         this.filectrl = new FileController();
     }
 
-    public void run() throws Exception {
+    public void execute() throws Exception {
         List<KafkaStream<String, String>> streams = kc.consume();
         boolean flag = true;
         for (KafkaStream<String, String> stream : streams) {
