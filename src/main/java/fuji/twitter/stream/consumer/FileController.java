@@ -72,9 +72,10 @@ public class FileController {
                 this.fileName = date + ext;
                 return;
             } else if (!dateDir.equals(date.substring(0, 8))) {
-                String dir = fileName.substring(0, 8);
+                this.fileName = date + ext;
+                String dir = date.substring(0, 8);
                 makeDateDir(dir);
-                dateDir = date.substring(0, 8);
+                this.dateDir = date.substring(0, 8);
                 return;
             } else {
                 try (FileOutputStream fo = new FileOutputStream(file, true);
@@ -97,5 +98,9 @@ public class FileController {
 
     public String getFileName() {
         return this.fileName;
+    }
+
+    public String getDirName() {
+        return this.dateDir;
     }
 }

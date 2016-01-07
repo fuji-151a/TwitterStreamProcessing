@@ -86,7 +86,7 @@ public class TwitterStreamFetcher {
                     flag = false;
                 }
                 String data = msg.message();
-                File file = new File(filectrl.getFileName(), rootPath);
+                File file = new File(rootPath + filectrl.getDirName(), filectrl.getFileName());
                 filectrl.write(data, file);
             }
         }
