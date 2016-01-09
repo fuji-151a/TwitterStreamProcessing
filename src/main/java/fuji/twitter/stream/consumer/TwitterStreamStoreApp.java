@@ -17,7 +17,7 @@ import org.kohsuke.args4j.Option;
  * Store Data from Kafka.
  * @author fuji-151a
  */
-public final class Fetcher {
+public final class TwitterStreamStoreApp {
 
     /**
      * Config file.
@@ -44,14 +44,14 @@ public final class Fetcher {
     /**
      * Not Create Instance.
      */
-    private Fetcher() { }
+    private TwitterStreamStoreApp() { }
 
     /**
      * Main application.
      * @param args option.
      */
     public static void main(final String[] args) {
-        Fetcher fetcher = new Fetcher();
+        TwitterStreamStoreApp fetcher = new TwitterStreamStoreApp();
         CmdLineParser parser = new CmdLineParser(fetcher);
         try {
             parser.parseArgument(args);
@@ -72,8 +72,8 @@ public final class Fetcher {
         }
         SimpleKafkaConsumer consumer
                 = new SimpleKafkaConsumer(fetcher.configFile);
-        TwitterStreamFetcher tsf
-                = new TwitterStreamFetcher(consumer, fetcher.rootPath);
+        StreamStoreFetcher tsf
+                = new StreamStoreFetcher(consumer, fetcher.rootPath);
         try {
             tsf.execute();
         } catch (Exception e) {

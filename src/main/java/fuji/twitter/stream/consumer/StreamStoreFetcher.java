@@ -19,7 +19,7 @@ import java.util.List;
  * Twitter data fetcher class.
  * @author fuji-151a
  */
-public class TwitterStreamFetcher {
+public class StreamStoreFetcher {
 
     /**
      * output dir root path.
@@ -44,14 +44,14 @@ public class TwitterStreamFetcher {
     /**
      * Constructor.
      */
-    public TwitterStreamFetcher() { }
+    public StreamStoreFetcher() { }
 
     /**
      * setting constructor.
      * @param consumer SimpleKafkaConsumer
      * @param rootDir store root path
      */
-    public TwitterStreamFetcher(
+    public StreamStoreFetcher(
             final SimpleKafkaConsumer consumer,
             final String rootDir
     ) {
