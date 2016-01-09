@@ -21,9 +21,11 @@ public class FileControllerTest {
 
     @Test
     public void testMakeDateDir() throws Exception {
-        String testDir = "./build/tmp/test_dir";
-        fctrl.makeDateDir(testDir);
-        File dir = new File(testDir);
+//        String testDir = "./build/tmp/test_dir";
+        String testDir = "test_dir";
+        String pare = "./build/tmp/";
+        fctrl.makeDateDir(pare, testDir);
+        File dir = new File(pare, testDir);
         assertThat(dir.exists(), is(true));
     }
 
@@ -49,6 +51,7 @@ public class FileControllerTest {
         String testFile = "./build/tmp/test_file3.txt";
         File file = new File(testFile);
         file.createNewFile();
+        System.out.println(file.getParent());
         fctrl.setDateDir("20151231");
         String testData = "{\"createdAt\": \"Dec 31, 2015 1:00:11 AM\"}";
         fctrl.write(testData, file);

@@ -45,8 +45,8 @@ public class FileController {
     private static String BR
             = System.getProperty("line.separator");
 
-    public void makeDateDir(String outputPath) {
-        File dir = new File(outputPath);
+    public void makeDateDir(String parenet, String outputPath) {
+        File dir = new File(parenet, outputPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -74,7 +74,8 @@ public class FileController {
             } else if (!dateDir.equals(date.substring(0, 8))) {
                 this.fileName = date + ext;
                 String dir = date.substring(0, 8);
-                makeDateDir(dir);
+                String rootDir = file.getParent().substring(0, file.getParent().length() - 8);
+                makeDateDir(rootDir, dir);
                 this.dateDir = date.substring(0, 8);
                 return;
             } else {

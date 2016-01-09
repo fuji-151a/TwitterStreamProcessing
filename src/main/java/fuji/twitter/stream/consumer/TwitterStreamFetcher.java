@@ -27,37 +27,6 @@ public class TwitterStreamFetcher {
     private SimpleKafkaConsumer kc;
     private FileController filectrl;
 
-
-//    public static void main(final String[] args)
-//            throws Exception {
-//        if (args.length < 2) {
-//            System.out.println("Please set ConfFile");
-//            System.out.println("Please set outputdir");
-//            System.exit(1);
-//        }
-//        SimpleKafkaConsumer kc = new SimpleKafkaConsumer(args[0]);
-//        TwitterStreamFetcher tsf = new TwitterStreamFetcher();
-//        List<KafkaStream<String, String>> streams = kc.consume();
-//        boolean flag = true;
-//        tsf.setOutputRootDir(args[1]);
-//        tsf.setFileName(tsf.getToday() + EXTENSION);
-//        for (KafkaStream<String, String> stream : streams) {
-//            for (MessageAndMetadata<String, String> msg : stream) {
-//                if (flag) {
-//                    JSONObject jsonObject =
-//                            new JSONObject(msg.message());
-//                    String createAt =
-//                            tsf.convertDate(jsonObject.getString("createdAt"));
-//                    tsf.setFileName(createAt + ".txt");
-//                    tsf.makeDir(createAt);
-//                    flag = false;
-//                }
-//                String data = msg.message();
-//                tsf.write(data);
-//            }
-//        }
-//    }
-
     public TwitterStreamFetcher() {
 
     }
@@ -80,8 +49,8 @@ public class TwitterStreamFetcher {
                     String createAt =
                             dc.convertDate();
                     filectrl.setFileName(createAt);
-                    String outputPath = rootPath + createAt.substring(0, 8) + "/";
-                    filectrl.makeDateDir(outputPath);
+//                    String outputPath = rootPath + createAt.substring(0, 8) + "/";
+                    filectrl.makeDateDir(rootPath, createAt.substring(0, 8));
                     filectrl.setDateDir(createAt.substring(0, 8));
                     flag = false;
                 }
