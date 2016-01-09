@@ -1,4 +1,4 @@
-group 'fuji_151a.twitter.stream.producer'
+group 'fuji_151a.twitter.stream'
 version '1.1-SNAPSHOT'
 
 // Apply the java plugin to add support for Java
