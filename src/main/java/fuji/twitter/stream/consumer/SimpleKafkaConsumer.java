@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
+ * Simple Kafka Consumer class.
  * @author fuji-151a
  */
 public class SimpleKafkaConsumer {
@@ -38,8 +38,16 @@ public class SimpleKafkaConsumer {
      * topic name.
      */
     private String topic;
+
+    /**
+     * partition num.
+     */
     private int partition;
 
+    /**
+     * Setting Constructor.
+     * @param fileName config file.
+     */
     public SimpleKafkaConsumer(final String fileName) {
         Properties prop = new Properties();
         try {
@@ -54,6 +62,10 @@ public class SimpleKafkaConsumer {
         }
     }
 
+    /**
+     * check config file.
+     * @param prop Properties instance.
+     */
     private void configCheck(final Properties prop) {
         Preconditions.checkNotNull(
                 prop.getProperty("topic"),
@@ -80,7 +92,8 @@ public class SimpleKafkaConsumer {
     public final List<KafkaStream<String, String>> consume() {
         Map<String, Integer> topicCountMap = ImmutableMap.of(topic, partition);
         Decoder<String> decoder = new StringDecoder(new VerifiableProperties());
-        return consumer.createMessageStreams(topicCountMap, decoder, decoder).get(topic);
+        return consumer.createMessageStreams(
+                topicCountMap, decoder, decoder).get(topic);
     }
 
 }

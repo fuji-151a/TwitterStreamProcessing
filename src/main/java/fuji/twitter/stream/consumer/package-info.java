@@ -1,5 +1,5 @@
 /**
- * package-info.java
+ * package-info.java.
  *
  * @since 2016/01/09
  * <p/>

@@ -13,14 +13,22 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 /**
- *
+ * Main App.
+ * Store Data from Kafka.
  * @author fuji-151a
  */
-public class Fetcher {
+public final class Fetcher {
+
+    /**
+     * Config file.
+     */
     @Option(name = "-c", aliases = "--config",
             required = true, metaVar = "<config>", usage = "configuration file")
     private String configFile;
 
+    /**
+     * Store root path.
+     */
     @Option(name = "-p", aliases = "--path",
             required = true, metaVar = "<path>", usage = "store path")
     private String rootPath;
@@ -33,8 +41,16 @@ public class Fetcher {
     private boolean usageFlag;
 
 
-    private Fetcher() {}
-    public static void main(String[] args) {
+    /**
+     * Not Create Instance.
+     */
+    private Fetcher() { }
+
+    /**
+     * Main application.
+     * @param args option.
+     */
+    public static void main(final String[] args) {
         Fetcher fetcher = new Fetcher();
         CmdLineParser parser = new CmdLineParser(fetcher);
         try {
@@ -54,8 +70,10 @@ public class Fetcher {
             parser.printUsage(System.out);
             return;
         }
-        SimpleKafkaConsumer consumer = new SimpleKafkaConsumer(fetcher.configFile);
-        TwitterStreamFetcher tsf = new TwitterStreamFetcher(consumer, fetcher.rootPath);
+        SimpleKafkaConsumer consumer
+                = new SimpleKafkaConsumer(fetcher.configFile);
+        TwitterStreamFetcher tsf
+                = new TwitterStreamFetcher(consumer, fetcher.rootPath);
         try {
             tsf.execute();
         } catch (Exception e) {

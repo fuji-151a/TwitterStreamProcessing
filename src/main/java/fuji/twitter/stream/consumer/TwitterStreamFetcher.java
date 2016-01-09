@@ -16,28 +16,55 @@ import java.io.File;
 import java.util.List;
 
 /**
- *
+ * Twitter data fetcher class.
  * @author fuji-151a
  */
 public class TwitterStreamFetcher {
 
-    /** output dir root path. */
+    /**
+     * output dir root path.
+     */
     private String rootPath;
 
+    /**
+     * Simple Kafka Consumer instance.
+     */
     private SimpleKafkaConsumer kc;
+
+    /**
+     * FileController instance.
+     */
     private FileController filectrl;
 
-    public TwitterStreamFetcher() {
+    /**
+     * sub string number.
+     */
+    private static final int SUBSTRING_NUM = 8;
 
-    }
+    /**
+     * Constructor.
+     */
+    public TwitterStreamFetcher() { }
 
-    public TwitterStreamFetcher(SimpleKafkaConsumer consumer, final String rootDir) {
+    /**
+     * setting constructor.
+     * @param consumer SimpleKafkaConsumer
+     * @param rootDir store root path
+     */
+    public TwitterStreamFetcher(
+            final SimpleKafkaConsumer consumer,
+            final String rootDir
+    ) {
         this.rootPath = rootDir;
         this.kc = consumer;
         this.filectrl = new FileController();
     }
 
-    public void execute() throws Exception {
+    /**
+     * execute.
+     * @throws Exception IO or JSON
+     */
+    public final void execute() throws Exception {
         List<KafkaStream<String, String>> streams = kc.consume();
         boolean flag = true;
         for (KafkaStream<String, String> stream : streams) {
@@ -45,17 +72,20 @@ public class TwitterStreamFetcher {
                 if (flag) {
                     JSONObject jsonObject =
                             new JSONObject(msg.message());
-                    DateConverter dc = new DateConverter(jsonObject.getString("createdAt"));
+                    DateConverter dc = new DateConverter(
+                            jsonObject.getString("createdAt"));
                     String createAt =
                             dc.convertDate();
                     filectrl.setFileName(createAt);
-//                    String outputPath = rootPath + createAt.substring(0, 8) + "/";
-                    filectrl.makeDateDir(rootPath, createAt.substring(0, 8));
-                    filectrl.setDateDir(createAt.substring(0, 8));
+                    String yyyyMMdd = createAt.substring(0, SUBSTRING_NUM);
+                    filectrl.makeDateDir(rootPath, yyyyMMdd);
+                    filectrl.setDateDir(yyyyMMdd);
                     flag = false;
                 }
                 String data = msg.message();
-                File file = new File(rootPath + filectrl.getDirName(), filectrl.getFileName());
+                File file = new File(
+                        rootPath + filectrl.getDirName(),
+                        filectrl.getFileName());
                 filectrl.write(data, file);
             }
         }
