@@ -1,6 +1,9 @@
 package fuji.twitter.stream.consumer;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,6 +24,13 @@ public class DateConverterTest {
         DateConverter dc = new DateConverter(date);
         String expected = "201512310100";
         assertThat(dc.convertDate(), is(expected));
+    }
+
+    @Test
+    public void test() {
+        Date date = new Date();
+        DateTime dateTime = new DateTime(date);
+        System.out.println(dateTime.getMillis());
     }
 
 }

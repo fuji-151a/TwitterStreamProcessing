@@ -8,6 +8,7 @@
  */
 package fuji.twitter.stream.consumer;
 
+import com.google.gson.Gson;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
@@ -15,6 +16,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * File Controller class.
@@ -31,6 +34,8 @@ public class FileController {
      * file size threshold.
      */
     private final long thr;
+
+    private final Gson gson = new Gson();
 
     /**
      * store file name.
@@ -51,6 +56,8 @@ public class FileController {
      * default file extension.
      */
     private static final String EXTENSION = ".txt";
+
+    private static final String ENCODE = "UTF-8";
 
     /**
      * line sparator.
@@ -143,6 +150,14 @@ public class FileController {
                     throw new IOException();
                 }
             }
+        }
+    }
+
+    public final void logWrite(final String msg, final File file, final boolean bool) throws IOException {
+        try (FileOutputStream fo = new FileOutputStream(file, bool);
+             OutputStreamWriter ow
+                     = new OutputStreamWriter(fo, ENCODE)) {
+            ow.write(msg);
         }
     }
 
