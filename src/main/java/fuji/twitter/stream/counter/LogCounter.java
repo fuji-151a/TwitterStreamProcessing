@@ -14,6 +14,7 @@ import fuji.twitter.stream.consumer.SimpleKafkaConsumer;
 import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 import org.joda.time.DateTime;
+import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.io.File;
@@ -46,6 +47,8 @@ public class LogCounter {
 
     private static final String EXTENSION = ".json";
 
+    public static final int RANGE_MS = 300;
+
     public LogCounter() { }
 
     public LogCounter(final SimpleKafkaConsumer consumer,
@@ -54,47 +57,39 @@ public class LogCounter {
         this.storePath = storeRootPath;
     }
 
-    public final void execute() throws Exception {
+    public final void execute() throws JSONException {
         List<KafkaStream<String, String>> streams = kc.consume();
-        int count = 0;
-        int secCnt = 0;
-        long currentTime = 0L;
-        String prevTimestamp = "";
+        Map<Long, Integer> cnt = new HashMap<>();
+        long tmp = 0;
         for (KafkaStream<String, String> stream : streams) {
             for (MessageAndMetadata<String, String> msg : stream) {
                 JSONObject jsonObject =
                         new JSONObject(msg.message());
                 Date date = new Date(jsonObject.getString("createdAt"));
                 DateTime dateTime = new DateTime(date);
-                String timestamp = dateTime.toString("yyyyMMddHHmm");
-                if (count == 0) {
-                    count++;
-                    prevTimestamp = timestamp;
-                } else if (!prevTimestamp.equals(timestamp)) {
-                    File file = new File(storePath, dateTime.toString("yyyyMMdd") + EXTENSION);
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("timestamp", timestamp);
-                    map.put("log_num", count);
-                    fcl.logWrite(gson.toJson(map) + BR, file, true);
-                    map.clear();
-                    count = 1;
-                    prevTimestamp = timestamp;
-                } else {
-                    count++;
+                long startUnixtime = dateTime.getMillis() / 1000L;
+                long endUnixtime = getEndTime(startUnixtime);
+                if (endUnixtime >= tmp) {
+                    if (cnt.containsKey(endUnixtime)) {
+                        cnt.put(endUnixtime, cnt.get(endUnixtime) + 1);
+                    } else {
+                        cnt.put(endUnixtime, 1);
+                    }
                 }
-                if (dateTime.getMillis() == currentTime + 1000) {
-                    File file = new File(storePath, "data" + EXTENSION);
-                    Map<String, Object> mapsec = new HashMap<String, Object>();
-                    mapsec.put("timestamp", timestamp);
-                    mapsec.put("log_num", secCnt);
-                    fcl.logWrite(gson.toJson(mapsec) + BR, file, false);
-                    mapsec.clear();
-                    secCnt = 1;
-                } else {
-                    secCnt++;
+                if (cnt.size() != 1) {
+                    long key = endUnixtime - RANGE_MS;
+                    Date d = new Date(key * 1000);
+                    DateTime dt = new DateTime(d);
+                    System.out.println(dt.toString("yyyyMMddHHmm") + "\t" + cnt.get(key));
+                    cnt.remove(key);
                 }
-                currentTime = dateTime.getMillis();
+                tmp = endUnixtime;
             }
         }
+    }
+
+    private long getEndTime(final long unixtime) {
+        long plusTime = RANGE_MS - unixtime % RANGE_MS;
+        return unixtime + plusTime;
     }
 }
